@@ -14,6 +14,10 @@
 #include <stdlib.h>
 #include "test.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "test.h"
+
 void	ft_print_map(char **map)
 {
 	int	i;
@@ -62,43 +66,9 @@ void	ft_print_list(t_list *list)
 	{
 		printf("x = %d\n", tmp->x);
 		printf("y = %d\n", tmp->y);
+		printf("f = %d\n", tmp->f);
 		tmp = tmp->next;
 	}
-}
-
-void	ft_del_node(t_list **list, int x, int y)
-{
-	t_list	*tmp;
-	t_list	*previous;
-
-	tmp = *list;
-	if ((tmp != NULL) && (tmp->x == x && tmp->y == y))
-	{
-		*list = tmp->next;
-		free(tmp);
-		return ;
-	}
-	while ((tmp != NULL) && (tmp->x != x && tmp->y != y))
-	{
-		previous = tmp;
-		tmp = tmp->next;
-	}
-	if (tmp == NULL)
-		return ;
-	previous->next = tmp->next;
-	free(tmp);
-}
-
-void	ft_add_node(t_list **list, int x, int y)
-{
-	t_list	*new;
-
-	if (!(new = malloc(sizeof(t_list))))
-		return ;
-	new->x = x; 
-	new->y = y;
-	new->next = *list;
-	*list = new;
 }
 
 int	main(void)
@@ -106,27 +76,39 @@ int	main(void)
 	char			**map;
 	t_list			*close;
 	t_list			*open;
-	t_node			start;
-	t_node			end;
+	t_point			point;
+	// char			*map1[] = {"00000000",
+	// 							"00000000", 
+	// 							"0000x000",
+	// 							"010xx020",
+	// 							"0000x000",
+	// 							"00000000",
+	// 							"00000000",
+	// 						};
 
-	start.x = 1;
-	start.y = 1;
-	end.x = 6;
-	end.y = 8;
+	point.start.x = 1;
+	point.start.y = 5;
+	point.end.x = 6;
+	point.end.y = 5;
 	if (!(close = malloc(sizeof(t_list))))
 		return (0);
 	if (!(open = malloc(sizeof(t_list))))
 		return (0);
 	map = ft_get_map();
-	map[start.y][start.x] = '1';
-	map[end.y][end.x] = '2';
+	map[point.start.y][point.start.x] = '1';
+	map[point.end.y][point.end.x] = '2';
+	map[5][3] = 'x';
+	map[5][4] = 'x';
+	map[4][4] = 'x';
+	map[6][4] = 'x';
+	map[3][4] = 'x';
+	map[2][4] = 'x';
 	open->next = NULL;
 	close->next = NULL;
-	ft_add_node(&open, start.x, start.y);
-	ft_add_node(&open, 3, 7);
-	ft_add_node(&open, 4, 2);
-	ft_del_node(&open, 3, 7);
+	ft_add_node(&open, point.start.x, point.start.y, 0);
 	ft_print_list(open);
 	ft_print_map(map);
+	ft_a_star(map, &open, &close, point);
+	ft_delist(&open);
 	return (0);
 }
