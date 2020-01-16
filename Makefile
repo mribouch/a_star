@@ -23,8 +23,8 @@ LIBFT = libft/libft.a
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT) test.h libft/libft.h
-		gcc $(FLAGS) $(LIBFT) $(OBJS) -o a_star
+$(NAME): $(OBJS) $(LIBFT) test.h
+		gcc $(FLAGS) $(OBJS) $(LIBFT) -o a_star
 
 %.o: %.c
 	gcc $(FLAGS) -c $< -o $@

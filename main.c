@@ -64,9 +64,9 @@ void	ft_print_list(t_list *list)
 	tmp = list;
 	while (tmp->next != NULL)
 	{
-		printf("x = %d\n", tmp->x);
-		printf("y = %d\n", tmp->y);
-		printf("f = %d\n", tmp->f);
+		printf("x = %d\n", tmp->node.x);
+		printf("y = %d\n", tmp->node.y);
+		printf("f = %d\n", tmp->node.f);
 		tmp = tmp->next;
 	}
 }
@@ -90,6 +90,7 @@ int	main(void)
 	point.start.y = 5;
 	point.end.x = 6;
 	point.end.y = 5;
+	point.start.father = NULL;
 	if (!(close = malloc(sizeof(t_list))))
 		return (0);
 	if (!(open = malloc(sizeof(t_list))))
@@ -105,7 +106,7 @@ int	main(void)
 	map[2][4] = 'x';
 	open->next = NULL;
 	close->next = NULL;
-	ft_add_node(&open, point.start.x, point.start.y, 0);
+	ft_add_node(&open, point.start);
 	ft_print_list(open);
 	ft_print_map(map);
 	ft_a_star(map, &open, &close, point);

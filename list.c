@@ -21,7 +21,7 @@ int		ft_find_node(t_list **list, int x, int y)
 	{
 		// ft_putendl("wowo");
 		// printf("dans close list : x = %d, y = %d\n", tmp->x, tmp->y);
-		if (tmp->x == x && tmp->y == y)
+		if (tmp->node.x == x && tmp->node.y == y)
 		{
 			// ft_putendl("OUI JE SUIS DANS LA CLOSE");
 			// printf("DANS LA CLOSE : x = %d, y = %d\n", x, y);
@@ -52,13 +52,13 @@ void	ft_del_node(t_list **list, int x, int y)
 	t_list	*previous;
 
 	tmp = *list;
-	if ((tmp != NULL) && (tmp->x == x && tmp->y == y))
+	if ((tmp != NULL) && (tmp->node.x == x && tmp->node.y == y))
 	{
 		*list = tmp->next;
 		free(tmp);
 		return ;
 	}
-	while ((tmp != NULL) && (tmp->x != x && tmp->y != y))
+	while ((tmp != NULL) && (tmp->node.x != x && tmp->node.y != y))
 	{
 		previous = tmp;
 		tmp = tmp->next;
@@ -69,15 +69,13 @@ void	ft_del_node(t_list **list, int x, int y)
 	free(tmp);
 }
 
-void	ft_add_node(t_list **list, int x, int y, int f)
+void	ft_add_node(t_list **list, t_node node)
 {
 	t_list	*new;
 
 	if (!(new = malloc(sizeof(t_list))))
 		return ;
-	new->x = x; 
-	new->y = y;
-	new->f = f;
+	new->node = node;
 	new->next = *list;
 	*list = new;
 }
