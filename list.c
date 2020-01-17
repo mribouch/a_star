@@ -12,6 +12,52 @@
 
 #include "test.h"
 
+t_father	ft_switchnode(t_node node)
+{
+	t_father father;
+
+	father.x = node.x;
+	father.y = node.y;
+	father.g = node.g;
+	father.f = node.f;
+	return (father);
+}
+
+void	ft_change_g(t_list **list, int g, t_father father, t_node find)
+{
+	t_list	*tmp;
+
+	tmp = *list;
+	while (tmp->next != NULL)
+	{
+		if (tmp->node.x == find.x && tmp->node.y == find.y)
+		{
+			tmp->node.g = g;
+			tmp->node.father = father;
+		}
+		tmp = tmp->next;
+	}
+}
+
+t_node	ft_get_node(t_list **list, int x, int y)
+{
+	t_node ret;
+
+	ret.x = -1;
+	ret.y = -1;
+	t_list	*tmp;
+
+	tmp = *list;
+	while (tmp->next != NULL)
+	{
+		// printf("nodex = %d, nody = %d, x = %d, y = %d\n", tmp->node.father->x, tmp->node.father->y, x, y);
+		if (tmp->node.x == x && tmp->node.y == y)
+			return (tmp->node);
+		tmp = tmp->next;
+	}
+	return (ret);
+}
+
 int		ft_find_node(t_list **list, int x, int y)
 {
 	t_list	*tmp;
@@ -52,20 +98,30 @@ void	ft_del_node(t_list **list, int x, int y)
 	t_list	*previous;
 
 	tmp = *list;
+	// printf("je cherche %d ; %d\n", x, y);
+	// ft_putendl("avant premier if");
+	// ft_print_list(*list);
 	if ((tmp != NULL) && (tmp->node.x == x && tmp->node.y == y))
 	{
+		// ft_putendl("dans premier if");
 		*list = tmp->next;
 		free(tmp);
 		return ;
 	}
-	while ((tmp != NULL) && (tmp->node.x != x && tmp->node.y != y))
+	// printf("tmpnode %d ; %d\n", tmp->node.x, tmp->node.y);
+	// while (tmp->next != NULL)
+	while (tmp->node.x != x || tmp->node.y != y)
 	{
+		// ft_putendl("dans boucle");
 		previous = tmp;
 		tmp = tmp->next;
 	}
 	if (tmp == NULL)
 		return ;
+	// ft_putendl("avant previous machin");
+	// if (tmp->next != NULL)
 	previous->next = tmp->next;
+	// ft_putendl("apres previous machin");
 	free(tmp);
 }
 

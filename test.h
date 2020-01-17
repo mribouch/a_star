@@ -3,8 +3,15 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include "libft/libft.h"
+# define INT_MAX 2147483647
 
-
+typedef struct			s_father
+{
+	int					x;
+	int					y;
+	int					g;
+	int					f;
+}						t_father;
 
 typedef struct			s_node
 {
@@ -13,7 +20,8 @@ typedef struct			s_node
     int                 g;
     int                 h;
     int                 f;
-    struct s_node		*father;
+	t_father			father;
+    
 }						t_node;
 
 typedef struct			s_list
@@ -35,5 +43,8 @@ void	ft_del_node(t_list **list, int x, int y);
 void	ft_delist(t_list **list);
 int		ft_find_node(t_list **list, int x, int y);
 void	ft_print_list(t_list *list);
+t_node	ft_get_node(t_list **list, int x, int y);
+void	ft_change_g(t_list **list, int g, t_father father, t_node find);
+t_father	ft_switchnode(t_node node);
 
 #endif

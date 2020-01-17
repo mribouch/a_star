@@ -62,13 +62,25 @@ void	ft_print_list(t_list *list)
 	t_list	*tmp;
 
 	tmp = list;
+	printf("LISTE\n");
 	while (tmp->next != NULL)
 	{
-		printf("x = %d\n", tmp->node.x);
-		printf("y = %d\n", tmp->node.y);
-		printf("f = %d\n", tmp->node.f);
+		printf("x = %d, y = %d, f = %d\n", tmp->node.x, tmp->node.y, tmp->node.f);
+		// if (tmp->node.father != NULL)
+		printf("x = %d, y = %d, f = %d\n", tmp->node.father.x, tmp->node.father.y, tmp->node.father.f);
 		tmp = tmp->next;
 	}
+}
+
+t_father	ft_initfather(void)
+{
+	t_father	ret;
+
+	ret.x = 0;
+	ret.y = 0;
+	ret.f = 0;
+	ret.g = 0;
+	return (ret);
 }
 
 int	main(void)
@@ -90,7 +102,8 @@ int	main(void)
 	point.start.y = 5;
 	point.end.x = 6;
 	point.end.y = 5;
-	point.start.father = NULL;
+	point.start.g = 0;
+	point.start.father = ft_initfather();
 	if (!(close = malloc(sizeof(t_list))))
 		return (0);
 	if (!(open = malloc(sizeof(t_list))))
@@ -98,6 +111,10 @@ int	main(void)
 	map = ft_get_map();
 	map[point.start.y][point.start.x] = '1';
 	map[point.end.y][point.end.x] = '2';
+	map[3][0] = 'x';
+	map[3][1] = 'x';
+	map[3][2] = 'x';
+	map[3][3] = 'x';
 	map[5][3] = 'x';
 	map[5][4] = 'x';
 	map[4][4] = 'x';
@@ -107,8 +124,9 @@ int	main(void)
 	open->next = NULL;
 	close->next = NULL;
 	ft_add_node(&open, point.start);
-	ft_print_list(open);
+	// ft_print_list(open);
 	ft_print_map(map);
+	ft_putendl("------------------");
 	ft_a_star(map, &open, &close, point);
 	ft_delist(&open);
 	return (0);
