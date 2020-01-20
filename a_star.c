@@ -21,10 +21,10 @@ int		ft_isvalid(int x, int y)
 	return (0);
 }
 
-int		ft_analyse(int x, int y, char **map, t_list **close)
+int		ft_analyse(int x, int y, t_star star, t_list **close)
 {
 	// ft_putendl("here ?");
-	if (map[y][x] == 'x' || ft_find_node(close, x, y) == 1)
+	if (star.map.map[y][x] == star.wall || ft_find_node(close, x, y) == 1)
 		return (1);
 	if (ft_isvalid(x, y) == 0)
 		return (1);
@@ -50,7 +50,7 @@ t_node	ft_fill_node(int x, int y, int f)
 	return (node);
 }
 
-t_node		ft_get_f(int x, int y, t_point point, t_node cur_node)
+t_node		ft_get_f(int x, int y, t_mainnode point, t_node cur_node)
 {
 	t_node	ret;
 
@@ -68,7 +68,7 @@ t_node		ft_get_f(int x, int y, t_point point, t_node cur_node)
 	return (ret);
 }
 
-void	ft_step_child(t_node child, t_node cur_node, t_list **open, t_list **close, t_point point)
+void	ft_step_child(t_node child, t_node cur_node, t_list **open, t_list **close, t_mainnode point)
 {
 	(void)close;
 	(void)point;
@@ -88,49 +88,49 @@ void	ft_step_child(t_node child, t_node cur_node, t_list **open, t_list **close,
 		ft_add_node(open, child);
 }
 
-void	ft_check_child(char **map, t_list **open, t_list **close, t_point point, t_node cur_node)
+void	ft_check_child(t_star star, t_list **open, t_list **close, t_node cur_node)
 {
 	t_node node;
 
-	if (ft_analyse(cur_node.x - 1, cur_node.y - 1, map, close) == 0)
+	if (ft_analyse(cur_node.x - 1, cur_node.y - 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y - 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x - 1, cur_node.y - 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y - 1, map, close) == 0)
+	if (ft_analyse(cur_node.x + 1, cur_node.y - 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y - 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x + 1, cur_node.y - 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x - 1, cur_node.y, map, close) == 0)
+	if (ft_analyse(cur_node.x - 1, cur_node.y, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x - 1, cur_node.y, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y, map, close) == 0)
+	if (ft_analyse(cur_node.x + 1, cur_node.y, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x + 1, cur_node.y, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x - 1, cur_node.y + 1, map, close) == 0)
+	if (ft_analyse(cur_node.x - 1, cur_node.y + 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y + 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x - 1, cur_node.y + 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y + 1, map, close) == 0)
+	if (ft_analyse(cur_node.x + 1, cur_node.y + 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y + 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x + 1, cur_node.y + 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x, cur_node.y - 1, map, close) == 0)
+	if (ft_analyse(cur_node.x, cur_node.y - 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x, cur_node.y - 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x, cur_node.y - 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x, cur_node.y + 1, map, close) == 0)
+	if (ft_analyse(cur_node.x, cur_node.y + 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x, cur_node.y + 1, point, cur_node);
-		ft_step_child(node, cur_node, open, close, point);
+		node = ft_get_f(cur_node.x, cur_node.y + 1, star.point, cur_node);
+		ft_step_child(node, cur_node, open, close, star.point);
 	}
 	// printf("node renvoyé = x = %d, y = %d, f = %d\n", node.x, node.y, node.f);
 }
@@ -151,7 +151,7 @@ t_node	ft_find_lower_f(t_list **list)
 	return (ret);
 }
 
-void	ft_get_path(t_node cur_node, t_list **close, t_point point, char **map)
+void	ft_get_path(t_node cur_node, t_list **close, t_mainnode point, char **map)
 {
 	//  t_list *tmp;
 	// int		i;
@@ -169,7 +169,7 @@ void	ft_get_path(t_node cur_node, t_list **close, t_point point, char **map)
 	ft_print_map(map);
 }
 
-void    ft_a_star(char **map, t_list **open, t_list **close, t_point point)
+void    ft_a_star(t_star star, t_list **open, t_list **close)
 {
     t_list  *path;
 	t_node	cur_node;
@@ -183,12 +183,12 @@ void    ft_a_star(char **map, t_list **open, t_list **close, t_point point)
 	tmpclo = *close;
 	// (void)tmpclo;
 	// (void)map;
-	if (ft_isvalid(point.start.x, point.start.y) == 0)
+	if (ft_isvalid(star.point.start.x, star.point.start.y) == 0)
 	{
 		ft_putendl("Start point invalid !");
 		return ;
 	}
-	if (ft_isvalid(point.end.x, point.end.y) == 0)
+	if (ft_isvalid(star.point.end.x, star.point.end.y) == 0)
 	{
 		ft_putendl("Destination point is invalid !");
 		return ;
@@ -202,14 +202,14 @@ void    ft_a_star(char **map, t_list **open, t_list **close, t_point point)
 		// ft_print_list(tmpop);
 		// ft_putendl("avant find lower f");
 		cur_node = ft_find_lower_f(&tmpop);
-		if (cur_node.x == point.end.x && cur_node.y == point.end.y)
+		if (cur_node.x == star.point.end.x && cur_node.y == star.point.end.y)
 			break;
 		// ft_putendl("avant del node");
 		ft_del_node(&tmpop, cur_node.x, cur_node.y);
 		// ft_putendl("liste open pres del");
 		// ft_putendl("aprees del node");
 		ft_add_node(&tmpclo, cur_node);
-        ft_check_child(map, &tmpop, &tmpclo, point, cur_node);
+        ft_check_child(star, &tmpop, &tmpclo, cur_node);
 		// printf("curx = %d, cury = %d\n", tmpclo->node.x, tmpclo->node.y);
 		// ft_print_list(tmpclo);
 		// ft_putendl("------FIN DE BOUCLE-------");
@@ -227,5 +227,5 @@ void    ft_a_star(char **map, t_list **open, t_list **close, t_point point)
 	// cur_node = ft_get_node(&tmpclo, 5, 6);
 	// printf("curx = %d, cury = %d\n", cur_node.father.x, cur_node.father.y);
 	// printf("father : x = %d, y = %d\n", cur_node.father.x, cur_node.father.y);
-	ft_get_path(cur_node, &tmpclo, point, map);
+	ft_get_path(cur_node, &tmpclo, star.point, star.map.map);
 }

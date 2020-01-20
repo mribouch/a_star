@@ -83,51 +83,53 @@ t_father	ft_initfather(void)
 	return (ret);
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	char			**map;
-	t_list			*close;
-	t_list			*open;
-	t_point			point;
-	// char			*map1[] = {"00000000",
-	// 							"00000000", 
-	// 							"0000x000",
-	// 							"010xx020",
-	// 							"0000x000",
-	// 							"00000000",
-	// 							"00000000",
-	// 						};
+	t_map			map;
+	t_star			star;
+	int				fd;
+	char			**map1;
+	t_list			*closel;
+	t_list			*openl;
+	t_mainnode			point;
 
+	(void)ac;
 	point.start.x = 1;
 	point.start.y = 5;
 	point.end.x = 6;
 	point.end.y = 5;
 	point.start.g = 0;
 	point.start.father = ft_initfather();
-	if (!(close = malloc(sizeof(t_list))))
+	if (!(closel = malloc(sizeof(t_list))))
 		return (0);
-	if (!(open = malloc(sizeof(t_list))))
+	if (!(openl = malloc(sizeof(t_list))))
 		return (0);
-	map = ft_get_map();
-	map[point.start.y][point.start.x] = '1';
-	map[point.end.y][point.end.x] = '2';
-	map[3][0] = 'x';
-	map[3][1] = 'x';
-	map[3][2] = 'x';
-	map[3][3] = 'x';
-	map[5][3] = 'x';
-	map[5][4] = 'x';
-	map[4][4] = 'x';
-	map[6][4] = 'x';
-	map[3][4] = 'x';
-	map[2][4] = 'x';
-	open->next = NULL;
-	close->next = NULL;
-	ft_add_node(&open, point.start);
-	// ft_print_list(open);
-	ft_print_map(map);
+	fd = open(av[1], O_RDONLY);
+	ft_map(fd);
+	map1 = ft_get_map();
+	map1[point.start.y][point.start.x] = '1';
+	map1[point.end.y][point.end.x] = '2';
+	map1[3][0] = 'x';
+	map1[3][1] = 'x';
+	map1[3][2] = 'x';
+	map1[3][3] = 'x';
+	map1[5][3] = 'x';
+	map1[5][4] = 'x';
+	map1[4][4] = 'x';
+	map1[6][4] = 'x';
+	map1[3][4] = 'x';
+	map1[2][4] = 'x';
+	openl->next = NULL;
+	closel->next = NULL;
+	map.map = map1;
+	star.map = map;
+	star.wall = 'x';
+	star.point = point;
+	ft_add_node(&openl, point.start);
+	// ft_print_list(openl);
+	ft_print_map(map1);
 	ft_putendl("------------------");
-	ft_a_star(map, &open, &close, point);
-	ft_delist(&open);
+	ft_a_star(star, &openl, &closel);
+	ft_delist(&openl);
 	return (0);
 }
