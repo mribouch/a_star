@@ -18,16 +18,22 @@
 #include <stdlib.h>
 #include "test.h"
 
-void	ft_print_map(char **map)
+void	ft_print_map(t_map map)
 {
 	int	i;
-	// int	j;
+	int	j;
 
 	i = 0;
-	// j = 0;
-	while (i < 10)
+	j = 0;
+	while (i < map.height)
 	{
-		printf("%s\n", map[i]);
+		while (j < map.width)
+		{
+			ft_putnbr(map.map[j + i * map.width]);
+			j++;
+		}
+		j = 0;
+		ft_putchar('\n');
 		i++;
 	}
 }
@@ -83,53 +89,66 @@ t_father	ft_initfather(void)
 	return (ret);
 }
 
+t_node	init(t_map map, t_mob monstre, t_mob player)
+{
+	t_star			star;
+	t_list			*closel;
+	t_list			*openl;
+	t_mainnode		point;
+	t_node			node;
+
+	point.start.x = (int)monstre.x;
+	point.start.y = (int)monstre.y;
+	point.end.x = (int)player.x;
+	point.end.y = (int)player.y;
+	point.start.g = 0;
+	point.start.father = ft_initfather();
+	node.x = 0;
+	if (!(closel = malloc(sizeof(t_list))))
+		return (node);
+	if (!(openl = malloc(sizeof(t_list))))
+		return (node);
+	openl->next = NULL;
+	closel->next = NULL;
+	star.map = map;
+	star.wall = 1;
+	star.point = point;
+	ft_add_node(&openl, point.start);
+	ft_putendl("------------------");
+	node = ft_a_star(star, &openl, &closel);
+	// ft_delist(&openl);
+	return (node);
+}
+
 int	main(int ac, char **av)
 {
 	t_map			map;
-	t_star			star;
 	int				fd;
-	char			**map1;
-	t_list			*closel;
-	t_list			*openl;
-	t_mainnode			point;
+	t_mob			monstre;
+	t_mob			player;
+	int				i;
+	t_node			node;
 
-	(void)ac;
-	point.start.x = 1;
-	point.start.y = 5;
-	point.end.x = 6;
-	point.end.y = 5;
-	point.start.g = 0;
-	point.start.father = ft_initfather();
-	if (!(closel = malloc(sizeof(t_list))))
+	i = 0;
+	if (ac != 2)
+	{
+		ft_putendl("no map");
 		return (0);
-	if (!(openl = malloc(sizeof(t_list))))
-		return (0);
+	}
+	monstre.x = 1;
+	monstre.y = 6;
+	player.x = 10;
+	player.y = 2;
+	map.width = 0;
 	fd = open(av[1], O_RDONLY);
-	ft_map(fd);
-	map1 = ft_get_map();
-	map1[point.start.y][point.start.x] = '1';
-	map1[point.end.y][point.end.x] = '2';
-	map1[3][0] = 'x';
-	map1[3][1] = 'x';
-	map1[3][2] = 'x';
-	map1[3][3] = 'x';
-	map1[5][3] = 'x';
-	map1[5][4] = 'x';
-	map1[4][4] = 'x';
-	map1[6][4] = 'x';
-	map1[3][4] = 'x';
-	map1[2][4] = 'x';
-	openl->next = NULL;
-	closel->next = NULL;
-	map.map = map1;
-	star.map = map;
-	star.wall = 'x';
-	star.point = point;
-	ft_add_node(&openl, point.start);
-	// ft_print_list(openl);
-	ft_print_map(map1);
-	ft_putendl("------------------");
-	ft_a_star(star, &openl, &closel);
-	ft_delist(&openl);
+	map = ft_map(fd, map);
+	while (i < 20)
+	{
+		ft_putendl("main boucle");
+		node = init(map, monstre, player);
+		monstre.x = node.x;
+		monstre.y = node.y;
+		i++;
+	}
 	return (0);
 }

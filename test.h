@@ -13,7 +13,7 @@ typedef struct			s_map
 {
 	int					width;
 	int					height;
-	char				**map;
+	int					*map;
 }						t_map;
 
 typedef struct			s_father
@@ -46,25 +46,32 @@ typedef struct          s_mainnode
     t_node              end;
 }                       t_mainnode;
 
+typedef struct			s_mob
+{
+	float				x;
+	float				y;
+	int					wall;
+}						t_mob;
+
 typedef struct			s_star
 {
-	t_list				open;
-	t_list				close;
-	char				wall;
+	int					wall;
 	t_map				map;
 	t_mainnode			point;
 }						t_star;
 
-void    	ft_a_star(t_star star, t_list **open, t_list **close);
-void		ft_print_map(char **map);
+t_node    	ft_a_star(t_star star, t_list **open, t_list **close);
+void		ft_print_map(t_map map);
 void		ft_add_node(t_list **list, t_node node);
 void		ft_del_node(t_list **list, int x, int y);
 void		ft_delist(t_list **list);
 int			ft_find_node(t_list **list, int x, int y);
+int			ft_count_node(t_list **list);
 void		ft_print_list(t_list *list);
-t_node		ft_get_node(t_list **list, int x, int y);
+t_node		*ft_get_node(t_list **list, int x, int y);
+t_node		init(t_map map, t_mob monstre, t_mob player);
 void		ft_change_g(t_list **list, int g, t_father father, t_node find);
-int			*ft_map(int fd);
-t_father	ft_switchnode(t_node node);
+t_map		ft_map(int fd, t_map map);
+t_father	ft_convertnode(t_node node);
 
 #endif

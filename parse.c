@@ -6,7 +6,7 @@
 /*   By: mribouch <mribouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 17:32:57 by mribouch          #+#    #+#             */
-/*   Updated: 2020/01/20 18:49:32 by mribouch         ###   ########.fr       */
+/*   Updated: 2020/01/21 14:31:39 by mribouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,25 +101,53 @@ void	ft_print_tab(int *tab)
 	}
 }
 
-int	*ft_map(int fd)
+int		ft_get_width(char *line)
+{
+	int	i;
+	int	width;
+
+	width = 0;
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] >= 48 && line[i] <= 57)
+		{
+			width++;
+			while (line[i] >= 48 && line[i] <= 57)
+				i++;
+		}
+		i++;
+	}
+	return (width);
+}
+
+t_map	ft_map(int fd, t_map map)
 {
 	char	*full;
 	int		*tab;
 	char	*line;
+	int		height;
+
 	full = NULL;
+	height = 0;
 	if (get_next_line(fd, &line) > 0)
 	{
 		full = ft_strnew(1);
 		full = ft_strjoin(full, line);
+		height++;
+		map.width = ft_get_width(line);
 	}
 	while (get_next_line(fd, &line) > 0)
 	{
 		full = ft_strjoin(full, line);
+		height++;
 		// free(line);
 	}
 	// ft_putendl(full);
 	tab = ft_tab(full);
+	map.height = height;
 	ft_print_tab(tab);
 	ft_putendl("voila");
-	return (tab);
+	map.map = tab;
+	return (map);
 }
