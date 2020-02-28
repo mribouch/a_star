@@ -63,17 +63,17 @@ char	**ft_get_map(void)
 	return (map);
 }
 
-void	ft_print_list(t_list *list)
+void	ft_print_list(t_star_list *list)
 {
-	t_list	*tmp;
+	t_star_list	*tmp;
 
 	tmp = list;
 	printf("LISTE\n");
 	while (tmp->next != NULL)
 	{
-		printf("x = %d, y = %d, f = %d\n", tmp->node.x, tmp->node.y, tmp->node.f);
+		printf("x = %d, y = %d, f = %d\n", tmp->node.pos.x, tmp->node.pos.y, tmp->node.f);
 		// if (tmp->node.father != NULL)
-		printf("x = %d, y = %d, f = %d\n", tmp->node.father.x, tmp->node.father.y, tmp->node.father.f);
+		printf("x = %d, y = %d, f = %d\n", tmp->node.father.pos.x, tmp->node.father.pos.y, tmp->node.father.f);
 		tmp = tmp->next;
 	}
 }
@@ -82,8 +82,8 @@ t_father	ft_initfather(void)
 {
 	t_father	ret;
 
-	ret.x = 0;
-	ret.y = 0;
+	ret.pos.x = 0;
+	ret.pos.y = 0;
 	ret.f = 0;
 	ret.g = 0;
 	return (ret);
@@ -92,21 +92,21 @@ t_father	ft_initfather(void)
 t_node	init(t_map map, t_mob monstre, t_mob player)
 {
 	t_star			star;
-	t_list			*closel;
-	t_list			*openl;
+	t_star_list			*closel;
+	t_star_list			*openl;
 	t_mainnode		point;
 	t_node			node;
 
-	point.start.x = (int)monstre.x;
-	point.start.y = (int)monstre.y;
-	point.end.x = (int)player.x;
-	point.end.y = (int)player.y;
+	point.start.pos.x = (int)monstre.pos.x;
+	point.start.pos.y = (int)monstre.pos.y;
+	point.end.pos.x = (int)player.pos.x;
+	point.end.pos.y = (int)player.pos.y;
 	point.start.g = 0;
 	point.start.father = ft_initfather();
-	node.x = 0;
-	if (!(closel = malloc(sizeof(t_list))))
+	node.pos.x = 0;
+	if (!(closel = malloc(sizeof(t_star_list))))
 		return (node);
-	if (!(openl = malloc(sizeof(t_list))))
+	if (!(openl = malloc(sizeof(t_star_list))))
 		return (node);
 	openl->next = NULL;
 	closel->next = NULL;
@@ -135,19 +135,22 @@ int	main(int ac, char **av)
 		ft_putendl("no map");
 		return (0);
 	}
-	monstre.x = 1;
-	monstre.y = 6;
-	player.x = 10;
-	player.y = 2;
+	ft_putendl("ahahahahaha");
+	monstre.pos.x = 1;
+	monstre.pos.y = 6;
+	player.pos.x = 10;
+	player.pos.y = 2;
 	map.width = 0;
+	ft_putendl("avant map");
 	fd = open(av[1], O_RDONLY);
 	map = ft_map(fd, map);
+	ft_putendl("apres map");
 	while (i < 20)
 	{
 		ft_putendl("main boucle");
 		node = init(map, monstre, player);
-		monstre.x = node.x;
-		monstre.y = node.y;
+		monstre.pos.x = node.pos.x;
+		monstre.pos.y = node.pos.y;
 		i++;
 	}
 	return (0);

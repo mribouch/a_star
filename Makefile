@@ -20,24 +20,32 @@ SRCS = main.c		\
 FLAGS = -Wall -Wextra -Werror
 OBJS = $(SRCS:.c=.o)
 
-LIBFT = libft/libft.a
+#LIBRARIES
+#	libft
+LIBFT_FOLDER=	./libft
+LIBFT		=	$(LIBFT_FOLDER)/libft.a
+INCLUDES	:=	$(INCLUDES) -I $(LIBFT_FOLDER)/includes
+LDFLAGS		:=	$(LDFLAGS) -L $(LIBFT_FOLDER) -lft
 
-all: $(NAME)
+# LIBFT = libft/libft.a
 
-$(NAME): $(OBJS) $(LIBFT) test.h
-		gcc $(FLAGS) $(OBJS) $(LIBFT) -o a_star
+all:	$(LIBFT) $(NAME)
+
+$(NAME): $(OBJS)
+	gcc $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 %.o: %.c
-	gcc $(FLAGS) -c $< -o $@
+	gcc $(FLAGS) -c $< -o $@ $(INCLUDES)
 
 $(LIBFT):
 	make -C libft
 
 clean:
-		rm -rf $(OBJS)
-		make clean -C libft/
+	rm -rf $(OBJS)
+	make clean -C $(LIBFT_FOLDER)
 
 fclean: clean
-		rm -rf a_star libft/libft.a
+	rm -rf $(NAME)
+	make fclean -C $(LIBFT_FOLDER)
 
-re: fclean $(NAME)
+re: fclean all

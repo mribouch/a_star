@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "test.h"
-#include "libft/libft.h"
 #include <math.h>
+#include <stdio.h>
 
 int		ft_isvalid(int x, int y, t_map map)
 {
@@ -21,7 +21,7 @@ int		ft_isvalid(int x, int y, t_map map)
 	return (0);
 }
 
-int		ft_analyse(int x, int y, t_star star, t_list **close)
+int		ft_analyse(int x, int y, t_star star, t_star_list **close)
 {
 	if (star.map.map[x + y * star.map.width] >= star.wall ||
 		ft_find_node(close, x, y) == 1)
@@ -35,8 +35,8 @@ t_node	ft_fill_node(int x, int y, int f)
 {
 	t_node	node;
 
-	node.x = x;
-	node.y = y;
+	node.pos.x = x;
+	node.pos.y = y;
 	node.f = f;
 	return (node);
 }
@@ -46,116 +46,116 @@ t_node	ft_get_f(int x, int y, t_mainnode point, t_node cur_node)
 	t_node	ret;
 
 	ret.father = ft_convertnode(cur_node);
-	if (x != cur_node.x && y != cur_node.y)
+	if (x != cur_node.pos.x && y != cur_node.pos.y)
 		ret.g = 14 + cur_node.g;
 	else
 		ret.g = 10 + cur_node.g;
-	ret.h = (abs(point.end.x - x) + abs(point.end.y - y)) * 10;
+	ret.h = (abs(point.end.pos.x - x) + abs(point.end.pos.y - y)) * 10;
 	ret.f = ret.g + ret.h;
-	ret.x = x;
-	ret.y = y;
+	ret.pos.x = x;
+	ret.pos.y = y;
 	return (ret);
 }
 
-void	ft_step_child(t_node child, t_node cur_node, t_list **open, t_list **close, t_mainnode point)
+void	ft_step_child(t_node child, t_node cur_node, t_star_list **open, t_star_list **close, t_mainnode point)
 {
-	if (child.x == point.end.x && child.y == point.end.y)
+	if (child.pos.x == point.end.pos.x && child.pos.y == point.end.pos.y)
 	{
 		child.father = ft_convertnode(cur_node);
 		ft_add_node(close, child);
 	}
-	if (ft_find_node(open, child.x, child.y) == 1 &&
-		ft_get_node(open, child.x, child.y)->f < child.f)
+	if (ft_find_node(open, child.pos.x, child.pos.y) == 1 &&
+		ft_get_node(open, child.pos.x, child.pos.y)->f < child.f)
 		return ;
-	if (ft_find_node(open, child.x, child.y) == 1 &&
-		child.g < ft_get_node(open, child.x, child.y)->g)
+	if (ft_find_node(open, child.pos.x, child.pos.y) == 1 &&
+		child.g < ft_get_node(open, child.pos.x, child.pos.y)->g)
 		ft_change_g(open, child.g, ft_convertnode(cur_node), child);
-	else if (ft_find_node(open, child.x, child.y) == 0)
+	else if (ft_find_node(open, child.pos.x, child.pos.y) == 0)
 		ft_add_node(open, child);
 }
 
-int		ft_validiag(int x, int y, t_star star, t_list **close, t_node cur_node)
+int		ft_validiag(int x, int y, t_star star, t_star_list **close, t_node cur_node)
 {
-	if (x < cur_node.x && y < cur_node.y)
-		if (ft_analyse(cur_node.x, cur_node.y - 1, star, close) == 0 ||
-			ft_analyse(cur_node.x - 1, cur_node.y, star, close) == 0)
+	if (x < cur_node.pos.x && y < cur_node.pos.y)
+		if (ft_analyse(cur_node.pos.x, cur_node.pos.y - 1, star, close) == 0 ||
+			ft_analyse(cur_node.pos.x - 1, cur_node.pos.y, star, close) == 0)
 			return (0);
-	if (x > cur_node.x && y > cur_node.y)
-		if (ft_analyse(cur_node.x, cur_node.y + 1, star, close) == 0 ||
-			ft_analyse(cur_node.x + 1, cur_node.y, star, close) == 0)
+	if (x > cur_node.pos.x && y > cur_node.pos.y)
+		if (ft_analyse(cur_node.pos.x, cur_node.pos.y + 1, star, close) == 0 ||
+			ft_analyse(cur_node.pos.x + 1, cur_node.pos.y, star, close) == 0)
 			return (0);
-	if (x > cur_node.x && y < cur_node.y)
-		if (ft_analyse(cur_node.x, cur_node.y - 1, star, close) == 0 ||
-			ft_analyse(cur_node.x + 1, cur_node.y, star, close) == 0)
+	if (x > cur_node.pos.x && y < cur_node.pos.y)
+		if (ft_analyse(cur_node.pos.x, cur_node.pos.y - 1, star, close) == 0 ||
+			ft_analyse(cur_node.pos.x + 1, cur_node.pos.y, star, close) == 0)
 			return (0);
-	if (x < cur_node.x && y > cur_node.y)
-		if (ft_analyse(cur_node.x, cur_node.y + 1, star, close) == 0 ||
-			ft_analyse(cur_node.x - 1, cur_node.y, star, close) == 0)
+	if (x < cur_node.pos.x && y > cur_node.pos.y)
+		if (ft_analyse(cur_node.pos.x, cur_node.pos.y + 1, star, close) == 0 ||
+			ft_analyse(cur_node.pos.x - 1, cur_node.pos.y, star, close) == 0)
 			return (0);
 	return (1);
 }
 
-void	ft_diag(t_star star, t_list **open, t_list **close, t_node cur_node)
+void	ft_diag(t_star star, t_star_list **open, t_star_list **close, t_node cur_node)
 {
 	t_node	node;
 
-	if (ft_analyse(cur_node.x - 1, cur_node.y - 1, star, close) == 0 &&
-		ft_validiag(cur_node.x - 1, cur_node.y - 1, star, close, cur_node) == 0)
+	if (ft_analyse(cur_node.pos.x - 1, cur_node.pos.y - 1, star, close) == 0 &&
+		ft_validiag(cur_node.pos.x - 1, cur_node.pos.y - 1, star, close, cur_node) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y - 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x - 1, cur_node.pos.y - 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y - 1, star, close) == 0 &&
-		ft_validiag(cur_node.x + 1, cur_node.y - 1, star, close, cur_node) == 0)
+	if (ft_analyse(cur_node.pos.x + 1, cur_node.pos.y - 1, star, close) == 0 &&
+		ft_validiag(cur_node.pos.x + 1, cur_node.pos.y - 1, star, close, cur_node) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y - 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x + 1, cur_node.pos.y - 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x - 1, cur_node.y + 1, star, close) == 0 &&
-		ft_validiag(cur_node.x - 1, cur_node.y + 1, star, close, cur_node) == 0)
+	if (ft_analyse(cur_node.pos.x - 1, cur_node.pos.y + 1, star, close) == 0 &&
+		ft_validiag(cur_node.pos.x - 1, cur_node.pos.y + 1, star, close, cur_node) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y + 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x - 1, cur_node.pos.y + 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y + 1, star, close) == 0 &&
-		ft_validiag(cur_node.x + 1, cur_node.y + 1, star, close, cur_node) == 0)
+	if (ft_analyse(cur_node.pos.x + 1, cur_node.pos.y + 1, star, close) == 0 &&
+		ft_validiag(cur_node.pos.x + 1, cur_node.pos.y + 1, star, close, cur_node) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y + 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x + 1, cur_node.pos.y + 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
 }
 
-void	ft_check_child(t_star star, t_list **open, t_list **close, t_node cur_node)
+void	ft_check_child(t_star star, t_star_list **open, t_star_list **close, t_node cur_node)
 {
 	t_node node;
 
 	ft_diag(star, open, close, cur_node);
-	if (ft_analyse(cur_node.x - 1, cur_node.y, star, close) == 0)
+	if (ft_analyse(cur_node.pos.x - 1, cur_node.pos.y, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x - 1, cur_node.y, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x - 1, cur_node.pos.y, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x + 1, cur_node.y, star, close) == 0)
+	if (ft_analyse(cur_node.pos.x + 1, cur_node.pos.y, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x + 1, cur_node.y, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x + 1, cur_node.pos.y, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x, cur_node.y - 1, star, close) == 0)
+	if (ft_analyse(cur_node.pos.x, cur_node.pos.y - 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x, cur_node.y - 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x, cur_node.pos.y - 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
-	if (ft_analyse(cur_node.x, cur_node.y + 1, star, close) == 0)
+	if (ft_analyse(cur_node.pos.x, cur_node.pos.y + 1, star, close) == 0)
 	{
-		node = ft_get_f(cur_node.x, cur_node.y + 1, star.point, cur_node);
+		node = ft_get_f(cur_node.pos.x, cur_node.pos.y + 1, star.point, cur_node);
 		ft_step_child(node, cur_node, open, close, star.point);
 	}
 }
 
-t_node	ft_find_lower_f(t_list **list)
+t_node	ft_find_lower_f(t_star_list **list)
 {
 	t_node	ret;
-	t_list	*tmp;
+	t_star_list	*tmp;
 
 	ret.f = INT_MAX;
 	tmp = *list;
@@ -168,33 +168,30 @@ t_node	ft_find_lower_f(t_list **list)
 	return (ret);
 }
 
-t_node	ft_closest_node(t_list **close, t_node end)
+t_node	ft_closest_node(t_star_list **close, t_node end)
 {
-	t_list	*tmp;
+	t_star_list	*tmp;
 	t_node	node;
 	int		dist;
 	int		lastdist;
 
 	tmp = *close;
 	lastdist = INT_MAX;
-	// resy = INT_MAX;
 	while (tmp->next != NULL)
 	{
-		dist = (tmp->node.x - end.x) *  (tmp->node.x - end.x) + (tmp->node.y - end.y) * (tmp->node.y - end.y);
+		dist = (tmp->node.pos.x - end.pos.x) *  (tmp->node.pos.x - end.pos.x) + (tmp->node.pos.y - end.pos.y) * (tmp->node.pos.y - end.pos.y);
 		if (dist < lastdist)
 		{
-			// printf("dist = %d\n", dist);
 			lastdist = dist;
-			node.x = tmp->node.x;
-			node.y = tmp->node.y;
-			// printf("closest x = %d, y = %d\n", node.x, node.y);
+			node.pos.x = tmp->node.pos.x;
+			node.pos.y = tmp->node.pos.y;
 		}
 		tmp = tmp->next;
 	}
 	return (node);
 }
 
-t_node	ft_get_path(t_node cur_node, t_list **close, t_star star)
+t_node	ft_get_path(t_node cur_node, t_star_list **close, t_star star)
 {
 	t_node	find;
 	t_node	prev;
@@ -204,61 +201,54 @@ t_node	ft_get_path(t_node cur_node, t_list **close, t_star star)
 	find = cur_node;
 	prev = find;
 	ft_print_list(*close);
-	while (find.x != star.point.start.x || find.y != star.point.start.y)
+	while (find.pos.x != star.point.start.pos.x || find.pos.y != star.point.start.pos.y)
 	{
-		if (i <= 3)
-		{
-			// printf("find x =  %d, y = %d\n", find.x, find.y);
-			// printf("find father x =  %d, y = %d\n", find.father.x, find.father.y);
-		}
-		// ft_putendl("retfyguhj");
-		find = *ft_get_node(close, find.father.x, find.father.y);
-		if (find.x != star.point.start.x || find.y != star.point.start.y)
+		find = *ft_get_node(close, find.father.pos.x, find.father.pos.y);
+		if (find.pos.x != star.point.start.pos.x || find.pos.y != star.point.start.pos.y)
 			prev = find;
 		i++;
 	}
-	star.map.map[prev.x + prev.y * star.map.width] = 7;
+	star.map.map[prev.pos.x + prev.pos.y * star.map.width] = 7;
 	ft_print_map(star.map);
 	return (prev);
 }
 
-t_node    ft_a_star(t_star star, t_list **open, t_list **close)
+t_node    ft_a_star(t_star star, t_star_list **open, t_star_list **close)
 {
-    t_list  *path;
+    t_star_list  *path;
 	t_node	cur_node;
 	int		count;
 
-	if (ft_isvalid(star.point.start.x, star.point.start.y, star.map) == 0)
+	if (ft_isvalid(star.point.start.pos.x, star.point.start.pos.y, star.map) == 0)
 	{
 		ft_putendl("Start point invalid !");
 		exit(0);
 	}
-	if (ft_isvalid(star.point.end.x, star.point.end.y, star.map) == 0)
+	if (ft_isvalid(star.point.end.pos.x, star.point.end.pos.y, star.map) == 0)
 	{
 		ft_putendl("Destination point is invalid !");
 		exit(0);
 	}
-	if (!(path = malloc(sizeof(t_list))))
+	if (!(path = malloc(sizeof(t_star_list))))
 		exit(0);
     while (*open)
     {
 		cur_node = ft_find_lower_f(open);
-		if (cur_node.x == star.point.end.x && cur_node.y == star.point.end.y)
+		if (cur_node.pos.x == star.point.end.pos.x && cur_node.pos.y == star.point.end.pos.y)
 		{
-			// printf("father low f x =  %d, y = %d\n", cur_node.father.x, cur_node.father.y);
 			ft_add_node(close, cur_node);
 			break;
 		}
 		if ((count = ft_count_node(open)) >= 1)
-			ft_del_node(open, cur_node.x, cur_node.y);
+			ft_del_node(open, cur_node.pos.x, cur_node.pos.y);
 		if (count == 0)
 		{
-			t_list	*retop;
-			t_list	*retclo;
+			t_star_list	*retop;
+			t_star_list	*retclo;
 
-			if (!(retop = malloc(sizeof(t_list))))
+			if (!(retop = malloc(sizeof(t_star_list))))
 				return (cur_node);
-			if (!(retclo = malloc(sizeof(t_list))))
+			if (!(retclo = malloc(sizeof(t_star_list))))
 				return (cur_node);
 			retclo->next = NULL;
 			retop->next = NULL;

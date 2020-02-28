@@ -6,7 +6,7 @@
 /*   By: mribouch <mribouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 17:32:57 by mribouch          #+#    #+#             */
-/*   Updated: 2020/01/21 14:31:39 by mribouch         ###   ########.fr       */
+/*   Updated: 2020/02/25 15:22:34 by mribouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,14 +130,14 @@ t_map	ft_map(int fd, t_map map)
 
 	full = NULL;
 	height = 0;
-	if (get_next_line(fd, &line) > 0)
+	if (ft_get_next_line(fd, &line) > 0)
 	{
 		full = ft_strnew(1);
 		full = ft_strjoin(full, line);
 		height++;
 		map.width = ft_get_width(line);
 	}
-	while (get_next_line(fd, &line) > 0)
+	while (ft_get_next_line(fd, &line) > 0)
 	{
 		full = ft_strjoin(full, line);
 		height++;
