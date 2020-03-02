@@ -1,5 +1,5 @@
-#ifndef TEST_H
-# define TEST_H
+#ifndef A_STAR_H
+# define A_STAR_H
 # include <stdlib.h>
 # include <stdio.h>
 # include "libft/includes/libft.h"
@@ -62,10 +62,13 @@ typedef struct			s_star
 {
 	int					wall;
 	t_map				map;
-	t_mainnode			point;
+	t_node				start;
+	t_node				end;
+	t_star_list			*openl;
+	t_star_list			*closel;
 }						t_star;
 
-t_node    	ft_a_star(t_star star, t_star_list **open, t_star_list **close);
+t_node    	*ft_a_star(t_star *star);
 void		ft_print_map(t_map map);
 void		ft_add_node(t_star_list **list, t_node node);
 void		ft_del_node(t_star_list **list, int x, int y);
@@ -74,7 +77,7 @@ int			ft_find_node(t_star_list **list, int x, int y);
 int			ft_count_node(t_star_list **list);
 void		ft_print_list(t_star_list *list);
 t_node		*ft_get_node(t_star_list **list, int x, int y);
-t_node		init(t_map map, t_mob monstre, t_mob player);
+t_node		*init(t_map map, t_mob monstre, t_mob player);
 void		ft_change_g(t_star_list **list, int g, t_father father, t_node find);
 t_map		ft_map(int fd, t_map map);
 t_father	ft_convertnode(t_node node);

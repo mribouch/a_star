@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"a_star.h": "c",
+		"stdio.h": "c"
+	}
+}

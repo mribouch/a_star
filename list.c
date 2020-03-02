@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "a_star.h"
 
 t_father	ft_convertnode(t_node node)
 {
@@ -102,23 +102,23 @@ void	ft_delist(t_star_list **list)
 {
 	t_star_list	*tmp;
 
-	ft_putendl("dans delist");
+	// ft_putendl("dans delist");
 	if (*list != NULL)
 	{
-		ft_putendl("dans if");
+		// ft_putendl("dans if");
 		while (*list)
 		{
-			ft_putendl("dans boucle");
+			// ft_putendl("dans boucle");
 			tmp = (*list)->next;
-			ft_putendl("apres next");
+			// ft_putendl("apres next");
 			free(*list);
-			ft_putendl("apres free");
+			// ft_putendl("apres free");
 			*list = tmp;
-			ft_putendl("fin boucle");
+			// ft_putendl("fin boucle");
 		}
-		ft_putendl("avant NULL");
+		// ft_putendl("avant NULL");
 		*list = NULL;
-		ft_putendl("apres NULL");
+		// ft_putendl("apres NULL");
 
 	}
 }

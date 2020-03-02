@@ -6,11 +6,11 @@
 /*   By: mribouch <mribouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 17:32:57 by mribouch          #+#    #+#             */
-/*   Updated: 2020/02/25 15:22:34 by mribouch         ###   ########.fr       */
+/*   Updated: 2020/03/02 14:58:52 by mribouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "a_star.h"
 
 int		ft_size_tab(char *full)
 {
