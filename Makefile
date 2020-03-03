@@ -15,7 +15,10 @@ NAME = a_star
 SRCS = main.c		\
 		a_star.c	\
 		parse.c		\
-		list.c
+		list.c		\
+		child.c		\
+		analyse.c	\
+		node.c
 
 FLAGS = -Wall -Wextra -Werror
 OBJS = $(SRCS:.c=.o)
